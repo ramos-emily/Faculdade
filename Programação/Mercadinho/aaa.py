@@ -8,8 +8,14 @@ carrinho = []
 
 while True:
     print("==============================================\n") 
-    print("            MERCADINHO FAISQUINHA\n             ")
+    print("            MERCADINHO EMILY\n             ")
+    print("    DIGITE 'sair' PARA ENCERRAR A COMPRA\n ")
     print("==============================================\n")
+    print("Opções de produtos:\n")
+    for produto, info in tabela.items():
+        print(f"{produto.capitalize()} - R${info['preco']:.2f} (Estoque: {info['estoque']})")
+    print("==============================================\n")
+
 
     produto = input("Qual o produto? ").capitalize()
    
@@ -21,7 +27,7 @@ while True:
         quantidade = int(input("Quantidade: "))
 
         if quantidade > tabela[produto]['estoque']:
-            print(f"cabou {produto}, disponivel: {tabela[produto]['estoque']}")
+            print(f"\n\ncabou {produto}, disponivel: {tabela[produto]['estoque']}")
         else:
             preco = tabela[produto]['preco']
             novoItem = {
@@ -32,10 +38,10 @@ while True:
 
         carrinho.append(novoItem)
         tabela[produto]['estoque'] -= quantidade
-        print(f"{quantidade} unidades de {produto} adicionados ao carrinho")
+        print(f"\n\n{quantidade} unidades de {produto} adicionados ao carrinho")
     
     else: 
-        print("a")
+        print("escreveu errado burro :( ")
 
 total = 0
 
