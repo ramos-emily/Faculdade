@@ -2,7 +2,7 @@ from shiny import ui
 
 def get_page_quiz():
     return (
-        ui.h3("👑 Quem é você no Shrek?"),
+        ui.h3("Quem é você no Shrek?"),
         ui.input_radio_buttons(
             "quiz_resposta",
             "Escolha seu personagem favorito:",

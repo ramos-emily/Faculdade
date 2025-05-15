@@ -2,7 +2,7 @@ from shiny import ui
 
 def get_page_cebola():
     return (
-        ui.h3("🧅 Camadas do Ogro"),
+        ui.h3("Camadas do Ogro"),
         ui.input_slider(
             "camadas", 
             "Quantas camadas você quer descascar?", 

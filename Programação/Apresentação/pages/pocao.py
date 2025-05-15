@@ -2,7 +2,7 @@ from shiny import ui
 
 def get_page_pocao():
     return (
-        ui.h3("🧪 Crie sua Poção Mágica!"),
+        ui.h3("Crie sua Poção Mágica!"),
         ui.input_checkbox_group(
             "ingredientes_pocao",
             "Escolha os ingredientes:",

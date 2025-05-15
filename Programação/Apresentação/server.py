@@ -1,4 +1,5 @@
-from shiny import render, ui
+import random
+from shiny import render, ui, reactive
 from pathlib import Path
 
 def server(input, output, session):
@@ -37,13 +38,13 @@ def server(input, output, session):
             return "Escolha ao menos um ingrediente."
 
         if "Pelos de ogro" in ingredientes and "Essência de cebola" in ingredientes:
-            return "🧅💪 Você criou uma Poção de Força Bruta com cheiro duvidoso!"
+            return "Você criou uma Poção de Força Bruta com cheiro duvidoso!"
         elif "Lágrimas de dragão" in ingredientes:
-            return "🔥 Você criou uma Poção de Fogo!"
+            return "Você criou uma Poção de Fogo!"
         elif "Olhos de sapo" in ingredientes:
-            return "👁️ Você criou uma Poção de Visão Noturna!"
+            return "Você criou uma Poção de Visão Noturna!"
         else:
-            return "✨ Você criou uma poção mágica misteriosa!"
+            return "Você criou uma poção mágica misteriosa!"
         
 
 
@@ -59,6 +60,32 @@ def server(input, output, session):
             5: "Parabéns! Você entendeu o Shrek: ogros têm sentimentos também."
         }
         return mensagens.get(camada, "Descasque mais para entender.")
+    
+    @output
+    @render.text
+    def resultado_caminho():
+        escolha = input.caminho_escolha()
+        if escolha == "Entrar no castelo":
+            return "Você entrou e... encontrou o Lord Farquaad!"
+        elif escolha == "Fugir para o pântano":
+            return "Você está seguro... mas coberto de lama!"
+        elif escolha == "Pedir ajuda ao Burro":
+            return "Burro chegou... e começou a cantar!"
+        return "Faça sua escolha acima."
+
+    frases = [
+        "Cebolas têm camadas!",
+        "É melhor pra todo mundo se você for embora!",
+        "Isso não é um conto de fadas!",
+        "O que tá fazendo no meu pântano?!",
+        "Burro... CAAAAALA a boca!"
+    ]
+
+    @output
+    @render.text
+    @reactive.event(input.botao_frase)
+    def sabedoria_shrek():
+        return random.choice(frases)    
 
 
 
