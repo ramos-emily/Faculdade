@@ -86,6 +86,27 @@ def server(input, output, session):
     @reactive.event(input.botao_frase)
     def sabedoria_shrek():
         return random.choice(frases)    
+    
+    @reactive.Effect
+    def _():
+        if input.btn_quiz():
+            session.set_input("navset_tab", "Quiz")
+        elif input.btn_pocao():
+            session.set_input("navset_tab", "Poção")
+        elif input.btn_cebola():
+            session.set_input("navset_tab", "Cebola")
+        elif input.btn_aventura():
+            session.set_input("navset_tab", "Aventura")
+
+    
+    @output
+    @render.image
+    def banner_img():
+        return {
+            "src": str(Path(__file__).parent / "www" / "shrek.png"),
+            "width": "100%",
+            "style": "max-height:300px; object-fit:cover; border-radius:8px;"
+        }
 
 
 
