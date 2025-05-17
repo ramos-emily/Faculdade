@@ -24,27 +24,25 @@ pontuacoes = {
 }
 
 def server(input, output, session):
-
     @output
     @render.text
     def resultado_quiz():
+        if not input.mostrar_resultado():
+            return ""
+        
         lugar = input.lugar()
         problema = input.problema()
         hobby = input.hobby()
 
-        # Se alguma pergunta não respondida
         if not lugar or not problema or not hobby:
-            return "Responda todas as perguntas para descobrir seu personagem."
+            return "Por favor, responda todas as perguntas."
 
-        # Calcula pontos por personagem
         pontos = {p: 0 for p in personagens}
-
         for p in personagens:
             pontos[p] += pontuacoes["lugar"][lugar].get(p, 0)
             pontos[p] += pontuacoes["problema"][problema].get(p, 0)
             pontos[p] += pontuacoes["hobby"][hobby].get(p, 0)
 
-        # Personagem com maior pontuação
         personagem = max(pontos, key=pontos.get)
 
         mensagens = {
@@ -54,38 +52,65 @@ def server(input, output, session):
             "Dragão": "Você é a Dragão! Feroz por fora, apaixonada por dentro."
         }
 
-        return f"{mensagens[personagem]}"
+        return mensagens.get(personagem, "Personagem não identificado")
 
     @output
     @render.image
     def image():
-        personagem = None
+        # Debug inicial
+        print("DEBUG: Função image() chamada")
+        
+        # Só mostra se o resultado deve ser exibido
+        if not input.mostrar_resultado():
+            print("DEBUG: Não mostrar resultado - retornando None")
+            return None
+        
+        # Obtém as respostas
         lugar = input.lugar()
         problema = input.problema()
         hobby = input.hobby()
-        if lugar and problema and hobby:
-            pontos = {p: 0 for p in personagens}
-            for p in personagens:
-                pontos[p] += pontuacoes["lugar"][lugar].get(p, 0)
-                pontos[p] += pontuacoes["problema"][problema].get(p, 0)
-                pontos[p] += pontuacoes["hobby"][hobby].get(p, 0)
-            personagem = max(pontos, key=pontos.get)
-
-        base = Path(__file__).parent / "www"
+        
+        # Verifica se todas as respostas foram fornecidas
+        if not all([lugar, problema, hobby]):
+            print("DEBUG: Respostas incompletas - retornando None")
+            return None
+        
+        # Calcula a pontuação
+        pontos = {p: 0 for p in personagens}
+        for p in personagens:
+            pontos[p] += pontuacoes["lugar"][lugar].get(p, 0)
+            pontos[p] += pontuacoes["problema"][problema].get(p, 0)
+            pontos[p] += pontuacoes["hobby"][hobby].get(p, 0)
+        
+        # Determina o personagem
+        personagem = max(pontos, key=pontos.get)
+        print(f"DEBUG: Personagem calculado: {personagem}")
+        
+        # Mapeamento correto dos arquivos
         imagens = {
             "Shrek": "Shrek.png",
-            "Burro": "Burro.png",
+            "Burro": "Burro.png", 
             "Fiona": "Fiona.png",
             "Dragão": "Dragao.png"
         }
-        if personagem in imagens:
-            return {"src": str(base / imagens[personagem]), "width": "300px"}
-        return {}
-
+        
+        # Caminho completo da imagem
+        img_path = Path(__file__).parent / "www" / imagens[personagem]
+        print(f"DEBUG: Caminho da imagem: {img_path}")
+        
+        if img_path.exists():
+            print("DEBUG: Imagem encontrada - retornando")
+            return {"src": str(img_path), "width": "300px", "alt": personagem}
+        else:
+            print(f"DEBUG: ERRO - Imagem não encontrada: {img_path}")
+            return None
+    
     @output
     @render.text
     def efeito_pocao():
         ingredientes = input.ingredientes_pocao()
+        print(f"Ingredientes selecionados: {ingredientes}")
+
         if not ingredientes:
             return "Escolha ao menos um ingrediente."
 
@@ -102,6 +127,8 @@ def server(input, output, session):
     @render.text
     def mensagem_cebola():
         camada = input.camadas()
+        print(f"Número de camadas selecionadas: {camada}")
+
         mensagens = {
             1: "Você arranhou a superfície... ogros são mais profundos que isso.",
             2: "Hmm, já tá ficando pessoal.",
@@ -115,6 +142,8 @@ def server(input, output, session):
     @render.text
     def resultado_caminho():
         escolha = input.caminho_escolha()
+        print(f"Escolha de caminho: {escolha}")
+
         if escolha == "Entrar no castelo":
             return "Você entrou e... encontrou o Lord Farquaad!"
         elif escolha == "Fugir para o pântano":
@@ -135,21 +164,37 @@ def server(input, output, session):
     @render.text
     @reactive.event(input.botao_frase)
     def sabedoria_shrek():
-        return random.choice(frases)
+        frase = random.choice(frases)
+        print(f"Frase escolhida: {frase}")
+        return frase
 
     @reactive.Effect
     def _():
         if input.btn_quiz():
+            print("Navegando para a aba Quiz")
             session.set_input("navset_tab", "Quiz")
         elif input.btn_pocao():
+            print("Navegando para a aba Poção")
             session.set_input("navset_tab", "Poção")
         elif input.btn_cebola():
+            print("Navegando para a aba Cebola")
             session.set_input("navset_tab", "Cebola")
         elif input.btn_aventura():
+            print("Navegando para a aba Aventura")
             session.set_input("navset_tab", "Aventura")
 
     @output
     @render.image
     def image_banner():
-        base = Path(__file__).parent / "www"
-        return {"src": str(base / "Banner.png"),"width": "100%", "height": "500px"}
+        banner_path = Path(__file__).parent / "www" / "Banner.png"
+        print(f"Verificando imagem do banner: {banner_path}")
+        if banner_path.exists():
+            return {"src": str(banner_path), "width": "100%", "height": "500px"}
+        else:
+            print("Banner não encontrado.")
+        return None
+    
+    @reactive.Effect
+    def _():
+        print(f"Valor de mostrar_resultado: {input.mostrar_resultado()}")
+        print(f"Caminho das imagens: {Path(__file__).parent / 'www'}")

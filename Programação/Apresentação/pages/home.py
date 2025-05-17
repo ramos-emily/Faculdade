@@ -20,31 +20,95 @@ def get_page_home():
             )
         ),
 
-ui.tags.section(
-    ui.tags.div(
-        ui.h2("Quem é você no Shrek?", id="sec_quiz", class_="section-title"),
-        
-        ui.input_radio_buttons(
-            "lugar",
-            "Qual lugar você prefere?",
-            choices=["Pântano", "Castelo", "Floresta"]
+        ui.tags.section(
+            ui.tags.div(
+                ui.h2("Quem é você no Shrek?", id="sec_quiz", class_="section-title"),
+                
+                # Container do quiz com navegação
+                ui.div(
+                    # Barra de progresso
+                    ui.div(
+                        ui.div(
+                            id="progress-bar",
+                            style=(
+                                "height: 6px; background-color: #2E8B57; "
+                                "width: 33%; border-radius: 3px;"
+                            )
+                        ),
+                        style=(
+                            "background-color: #f0f0f0; border-radius: 3px; "
+                            "margin-bottom: 20px;"
+                        )
+                    ),
+                    
+                    # Perguntas (uma por vez)
+                    ui.div(
+                        # Pergunta 1
+                        ui.div(
+                            ui.input_radio_buttons(
+                                "lugar",
+                                "1. Qual lugar você prefere?",
+                                choices=["Pântano", "Castelo", "Floresta"]
+                            ),
+                            id="pergunta1",
+                            style="display: block;"
+                        ),
+                        
+                        # Pergunta 2
+                        ui.div(
+                            ui.input_radio_buttons(
+                                "problema",
+                                "2. Como você lida com problemas?",
+                                choices=["Fico calmo", "Falo muito", "Luto"]
+                            ),
+                            id="pergunta2",
+                            style="display: none;"
+                        ),
+                        
+                        # Pergunta 3
+                        ui.div(
+                            ui.input_radio_buttons(
+                                "hobby",
+                                "3. Qual seu hobby favorito?",
+                                choices=["Cantar", "Lutar", "Dormir"]
+                            ),
+                            id="pergunta3",
+                            style="display: none;"
+                        ),
+                        
+                        # Navegação
+                        ui.div(
+                            ui.tags.button(
+                                ui.tags.i(class_="fas fa-arrow-left"),
+                                " Anterior",
+                                id="btn_anterior",
+                                class_="btn btn-default",
+                                style="margin-right: 10px; display: none;"
+                            ),
+                            ui.tags.button(
+                                "Próximo ",
+                                ui.tags.i(class_="fas fa-arrow-right"),
+                                id="btn_proximo",
+                                class_="btn btn-primary"
+                            ),
+                            style="text-align: center; margin-top: 20px;"
+                        ),
+                        id="quiz_container"
+                    ),
+                    
+                    ui.div(
+                        ui.output_text("resultado_quiz"),
+                        ui.div(
+                            ui.output_image("image"),
+                            style="margin: 20px auto; text-align: center; min-height: 300px;"
+                        ),
+                        id="quiz_resultado",
+                        style="display: none;"
+                    )
+                )
+            ),
+            class_="section"
         ),
-        ui.input_radio_buttons(
-            "problema",
-            "Como você lida com problemas?",
-            choices=["Fico calmo", "Falo muito", "Luto"]
-        ),
-        ui.input_radio_buttons(
-            "hobby",
-            "Qual seu hobby favorito?",
-            choices=["Cantar", "Lutar", "Dormir"]
-        ),
-
-        ui.output_text("resultado_quiz"),
-        ui.output_image("image")
-    ),
-    class_="section"
-),
 
 
         ui.tags.section(
@@ -120,5 +184,112 @@ ui.tags.section(
             input[type="checkbox"] {
                 margin-right: 8px;
             }
-        """)
+                       /* Estilos para o quiz */
+            .btn {
+                padding: 8px 16px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s;
+                font-family: 'Comic Sans MS', cursive;
+            }
+            
+            .btn-default {
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+            }
+            
+            .btn-primary {
+                background-color: #2E8B57;
+                color: white;
+                border: 1px solid #1E6B47;
+            }
+            
+            .btn:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+                          img[src$=".png"] {
+        min-height: 300px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+    }
+    
+    /* Estilo para quando não há imagem */
+    img[src=""] {
+        display: none;
+    }
+            
+            /* Ícones Font Awesome */
+            .fa-arrow-left, .fa-arrow-right {
+                margin: 0 5px;
+            }
+        """),
+        
+        # JavaScript para controlar o quiz
+        ui.tags.script("""
+            $(document).ready(function() {
+                let currentQuestion = 1;
+                const totalQuestions = 3;
+                
+                // Atualizar barra de progresso
+                function updateProgress() {
+                    const progress = (currentQuestion / totalQuestions) * 100;
+                    $("#progress-bar").css("width", progress + "%");
+                }
+                
+                // Mostrar próxima pergunta
+                    $("#btn_proximo").click(function() {
+                        if (currentQuestion < totalQuestions) {
+                        $("#pergunta" + currentQuestion).hide();
+                        currentQuestion++;
+                        $("#pergunta" + currentQuestion).show();
+                        
+                        // Atualizar navegação
+                        $("#btn_anterior").show();
+                        updateProgress();
+                        
+                        if (currentQuestion === totalQuestions) {
+                            $("#btn_proximo").html("Ver Resultado <i class='fas fa-check'></i>");
+                        }
+                        } else {
+                            $("#quiz_container").hide();
+                            $("#quiz_resultado").show();
+                            
+                            // Força a atualização dos outputs
+                            Shiny.setInputValue("mostrar_resultado", true, {priority: "event"});
+                            setTimeout(function() {
+                                Shiny.bindAll("#quiz_resultado");
+                            }, 100);
+                        }
+                });
+                
+                // Mostrar pergunta anterior
+                $("#btn_anterior").click(function() {
+                    if (currentQuestion > 1) {
+                        $("#pergunta" + currentQuestion).hide();
+                        currentQuestion--;
+                        $("#pergunta" + currentQuestion).show();
+                        
+                        // Atualizar navegação
+                        $("#btn_proximo").html("Próximo <i class='fas fa-arrow-right'></i>");
+                        updateProgress();
+                        
+                        if (currentQuestion === 1) {
+                            $("#btn_anterior").hide();
+                        }
+                    }
+                });
+            });
+        """),
+        # Adiciona Font Awesome para os ícones
+        ui.tags.link(
+            rel="stylesheet",
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        ),
+        
+        # Input escondido para controlar quando mostrar resultado
+        ui.input_checkbox("mostrar_resultado", "", value=False)
     )
+
