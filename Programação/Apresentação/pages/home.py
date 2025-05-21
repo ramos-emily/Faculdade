@@ -26,46 +26,46 @@ def get_page_home():
                 
                 ui.div(
                     ui.div(
-                        ui.div(
-                            id="progress-bar",
-                            style=(
-                                "height: 6px; background-color: #2E8B57; "
-                                "width: 33%; border-radius: 3px;"
-                            )
-                        ),
+                        id="progress-bar",
                         style=(
-                            "background-color: #f0f0f0; border-radius: 3px; "
-                            "margin-bottom: 20px;"
+                            "height: 6px; background-color: #2E8B57; "
+                            "width: 33%; border-radius: 3px;"
                         )
                     ),
-                    
+                    style=(
+                        "background-color: #f0f0f0; border-radius: 3px; "
+                        "margin-bottom: 20px;"
+                    )
+                ),
+                
+                ui.div(
                     ui.div(
                         ui.div(
                             ui.input_radio_buttons(
                                 "lugar",
                                 "1. Qual lugar você prefere?",
-                                choices=["Pântano", "Castelo", "Floresta"]
+                                choices=["Pântano", "Castelo", "Floresta"],
                             ),
+                            style="font-size: 1.1em;",
                             id="pergunta1",
-                            style="display: block;"
                         ),
                         ui.div(
                             ui.input_radio_buttons(
                                 "problema",
                                 "2. Como você lida com problemas?",
-                                choices=["Fico calmo", "Falo muito", "Luto"]
+                                choices=["Fico calmo", "Falo muito", "Luto"],
                             ),
+                            style="font-size: 1.1em; display: none;",
                             id="pergunta2",
-                            style="display: none;"
                         ),
                         ui.div(
                             ui.input_radio_buttons(
                                 "hobby",
                                 "3. Qual seu hobby favorito?",
-                                choices=["Cantar", "Lutar", "Dormir"]
+                                choices=["Cantar", "Lutar", "Dormir"],
                             ),
+                            style="font-size: 1.1em; display: none;",
                             id="pergunta3",
-                            style="display: none;"
                         ),
                         ui.div(
                             ui.tags.button(
@@ -73,17 +73,17 @@ def get_page_home():
                                 " Anterior",
                                 id="btn_anterior",
                                 class_="btn btn-default",
-                                style="margin-right: 10px; display: none;"
+                                style="margin-right: 10px; display: none;",
                             ),
                             ui.tags.button(
                                 "Próximo ",
                                 ui.tags.i(class_="fas fa-arrow-right"),
                                 id="btn_proximo",
-                                class_="btn btn-primary"
+                                class_="btn btn-primary",
                             ),
-                            style="text-align: center; margin-top: 20px;"
+                            style="text-align: center; margin-top: 20px;",
                         ),
-                        id="quiz_container"
+                        id="quiz_container",
                     ),
                     
                     ui.div(
@@ -97,26 +97,35 @@ def get_page_home():
                             )
                         ),
                         id="quiz_resultado",
-                        style="display: none;"
-                    )
-
-                )
+                        style="display: none;",
+                    ),
+                ),
             ),
-            class_="section"
+            class_="section",
         ),
-
 
         ui.tags.section(
             ui.tags.div(
-                ui.h2("Poção Mágica", id="sec_pocao", class_="section-title"),
+                ui.h2("🧪 Poção Mágica", id="sec_pocao", class_="section-title"),
                 ui.input_checkbox_group(
                     "ingredientes_pocao",
-                    "Escolha os ingredientes:",
-                    choices=["Pelos de ogro", "Essência de cebola", "Lágrimas de dragão", "Olhos de sapo"]
+                    "Escolha os ingredientes para sua poção:",
+                    choices=[
+                        "Pelos de ogro",
+                        "Essência de cebola",
+                        "Lágrimas de dragão",
+                        "Olhos de sapo",
+                        "Unha de troll",
+                        "Pó de fada",
+                        "Olhos de morcego",
+                    ],
                 ),
-                ui.output_text("efeito_pocao")
+                ui.div(
+                    ui.output_text("efeito_pocao"),
+                    class_="efeito-pocao-texto",
+                ),
             ),
-            class_="section"
+            class_="section",
         ),
 
         ui.tags.section(
@@ -127,11 +136,11 @@ def get_page_home():
                     "Quantas camadas você quer descascar?",
                     min=1,
                     max=5,
-                    value=1
+                    value=1,
                 ),
-                ui.output_text("mensagem_cebola")
+                ui.output_text("mensagem_cebola"),
             ),
-            class_="section"
+            class_="section",
         ),
 
         ui.tags.section(
@@ -140,14 +149,14 @@ def get_page_home():
                 ui.input_radio_buttons(
                     "caminho_escolha",
                     "Escolha seu caminho:",
-                    choices=["Entrar no castelo", "Fugir para o pântano", "Pedir ajuda ao Burro"]
+                    choices=["Entrar no castelo", "Fugir para o pântano", "Pedir ajuda ao Burro"],
                 ),
-                ui.output_text("resultado_caminho")
+                ui.output_text("resultado_caminho"),
             ),
-            class_="section"
+            class_="section",
         ),
+
         ui.tags.style("""
-                      
             #quiz_resultado img {
                 width: 100%;
                 height: 100%;
@@ -184,7 +193,8 @@ def get_page_home():
             input[type="checkbox"] {
                 margin-right: 8px;
             }
-                       /* Estilos para o quiz */
+
+            /* Estilos para o quiz */
             .btn {
                 padding: 8px 16px;
                 border-radius: 20px;
@@ -210,18 +220,19 @@ def get_page_home():
                 transform: translateY(-2px);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             }
-                          img[src$=".png"] {
-        min-height: 300px;
-        background-color: #f0f0f0;
-        border-radius: 10px;
-    }
+
+            img[src$=".png"] {
+                min-height: 300px;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+            }
            
             /* Ícones Font Awesome */
             .fa-arrow-left, .fa-arrow-right {
                 margin: 0 5px;
             }
         """),
-        
+
         # JavaScript para controlar o quiz
         ui.tags.script("""
             $(document).ready(function() {
@@ -235,8 +246,8 @@ def get_page_home():
                 }
                 
                 // Mostrar próxima pergunta
-                    $("#btn_proximo").click(function() {
-                        if (currentQuestion < totalQuestions) {
+                $("#btn_proximo").click(function() {
+                    if (currentQuestion < totalQuestions) {
                         $("#pergunta" + currentQuestion).hide();
                         currentQuestion++;
                         $("#pergunta" + currentQuestion).show();
@@ -248,16 +259,16 @@ def get_page_home():
                         if (currentQuestion === totalQuestions) {
                             $("#btn_proximo").html("Ver Resultado <i class='fas fa-check'></i>");
                         }
-                        } else {
-                            $("#quiz_container").hide();
-                            $("#quiz_resultado").show();
-                            
-                            // Força a atualização dos outputs
-                            Shiny.setInputValue("mostrar_resultado", true, {priority: "event"});
-                            setTimeout(function() {
-                                Shiny.bindAll("#quiz_resultado");
-                            }, 100);
-                        }
+                    } else {
+                        $("#quiz_container").hide();
+                        $("#quiz_resultado").show();
+                        
+                        // Força a atualização dos outputs
+                        Shiny.setInputValue("mostrar_resultado", true, {priority: "event"});
+                        setTimeout(function() {
+                            Shiny.bindAll("#quiz_resultado");
+                        }, 100);
+                    }
                 });
                 
                 // Mostrar pergunta anterior
@@ -282,7 +293,4 @@ def get_page_home():
             rel="stylesheet",
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         ),
-        
-        ui.input_checkbox("mostrar_resultado", "", value=False)
     )
-
