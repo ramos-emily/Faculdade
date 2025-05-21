@@ -56,37 +56,19 @@ def server(input, output, session):
 
     @output
     @render.image
-    def image():
-        # Debug inicial
-        print("DEBUG: Função image() chamada")
-        
-        # Só mostra se o resultado deve ser exibido
-        if not input.mostrar_resultado():
-            print("DEBUG: Não mostrar resultado - retornando None")
-            return None
-        
-        # Obtém as respostas
+    def image():        
         lugar = input.lugar()
         problema = input.problema()
         hobby = input.hobby()
         
-        # Verifica se todas as respostas foram fornecidas
-        if not all([lugar, problema, hobby]):
-            print("DEBUG: Respostas incompletas - retornando None")
-            return None
-        
-        # Calcula a pontuação
         pontos = {p: 0 for p in personagens}
         for p in personagens:
             pontos[p] += pontuacoes["lugar"][lugar].get(p, 0)
             pontos[p] += pontuacoes["problema"][problema].get(p, 0)
             pontos[p] += pontuacoes["hobby"][hobby].get(p, 0)
         
-        # Determina o personagem
         personagem = max(pontos, key=pontos.get)
-        print(f"DEBUG: Personagem calculado: {personagem}")
-        
-        # Mapeamento correto dos arquivos
+
         imagens = {
             "Shrek": "Shrek.png",
             "Burro": "Burro.png", 
@@ -94,9 +76,7 @@ def server(input, output, session):
             "Dragão": "Dragao.png"
         }
         
-        # Caminho completo da imagem
         img_path = Path(__file__).parent / "www" / imagens[personagem]
-        print(f"DEBUG: Caminho da imagem: {img_path}")
         
         if img_path.exists():
             print("DEBUG: Imagem encontrada - retornando")

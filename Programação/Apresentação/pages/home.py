@@ -24,9 +24,7 @@ def get_page_home():
             ui.tags.div(
                 ui.h2("Quem é você no Shrek?", id="sec_quiz", class_="section-title"),
                 
-                # Container do quiz com navegação
                 ui.div(
-                    # Barra de progresso
                     ui.div(
                         ui.div(
                             id="progress-bar",
@@ -41,9 +39,7 @@ def get_page_home():
                         )
                     ),
                     
-                    # Perguntas (uma por vez)
                     ui.div(
-                        # Pergunta 1
                         ui.div(
                             ui.input_radio_buttons(
                                 "lugar",
@@ -53,8 +49,6 @@ def get_page_home():
                             id="pergunta1",
                             style="display: block;"
                         ),
-                        
-                        # Pergunta 2
                         ui.div(
                             ui.input_radio_buttons(
                                 "problema",
@@ -64,8 +58,6 @@ def get_page_home():
                             id="pergunta2",
                             style="display: none;"
                         ),
-                        
-                        # Pergunta 3
                         ui.div(
                             ui.input_radio_buttons(
                                 "hobby",
@@ -75,8 +67,6 @@ def get_page_home():
                             id="pergunta3",
                             style="display: none;"
                         ),
-                        
-                        # Navegação
                         ui.div(
                             ui.tags.button(
                                 ui.tags.i(class_="fas fa-arrow-left"),
@@ -100,11 +90,16 @@ def get_page_home():
                         ui.output_text("resultado_quiz"),
                         ui.div(
                             ui.output_image("image"),
-                            style="margin: 20px auto; text-align: center; min-height: 300px;"
+                            style=(
+                                "margin: 20px auto; text-align: center; min-height: 300px; "
+                                "width: 300px; height: 300px; display: flex; align-items: center; "
+                                "justify-content: center; overflow: hidden;"
+                            )
                         ),
                         id="quiz_resultado",
                         style="display: none;"
                     )
+
                 )
             ),
             class_="section"
@@ -151,9 +146,14 @@ def get_page_home():
             ),
             class_="section"
         ),
-
-        # CSS embutido no final
         ui.tags.style("""
+                      
+            #quiz_resultado img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
             body {
                 background-color: #f0fff0;
                 font-family: 'Comic Sans MS', cursive;
@@ -215,12 +215,7 @@ def get_page_home():
         background-color: #f0f0f0;
         border-radius: 10px;
     }
-    
-    /* Estilo para quando não há imagem */
-    img[src=""] {
-        display: none;
-    }
-            
+           
             /* Ícones Font Awesome */
             .fa-arrow-left, .fa-arrow-right {
                 margin: 0 5px;
@@ -283,13 +278,11 @@ def get_page_home():
                 });
             });
         """),
-        # Adiciona Font Awesome para os ícones
         ui.tags.link(
             rel="stylesheet",
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         ),
         
-        # Input escondido para controlar quando mostrar resultado
         ui.input_checkbox("mostrar_resultado", "", value=False)
     )
 
