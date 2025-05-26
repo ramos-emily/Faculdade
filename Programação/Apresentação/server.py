@@ -70,28 +70,41 @@ def server(input, output, session):
             return {"src": str(img_path), "width": "300px", "alt": personagem}
         else:
             return None
-    
+
     @output
     @render.text
     def efeito_pocao():
         ingredientes = input.ingredientes_pocao()
-        if not ingredientes or ingredientes is None:
-            return "🧪 Escolha ao menos um ingrediente para começar a mistura."
-        ingredientes_set = set(ingredientes)
+        if not ingredientes:
+            return "🧪 O caldeirão está vazio! Escolha ao menos um ingrediente para começar a mistura."
+
+        # Ajusta nomes caso inclua emoji nos ingredientes (limpeza)
+        ingredientes_puros = [i.split(" ", 1)[-1] if " " in i else i for i in ingredientes]
+        ingredientes_set = set(ingredientes_puros)
+
+        texto_base = "✨ mexendo... ✨\n\n"
+
         if {"Pelos de ogro", "Essência de cebola"} <= ingredientes_set:
-            return "💪 Você criou uma *Poção de Força Bruta* com cheiro de chulé mágico!"
+            return texto_base + "💪 Você criou uma *Poção de Força Bruta* com um aroma de fazer ogros desmaiarem!"
         elif {"Lágrimas de dragão", "Olhos de morcego"} <= ingredientes_set:
-            return "🔥 Você criou uma *Poção de Fogo Noturno*! Ilumina e incendeia ao mesmo tempo!"
+            return texto_base + "🔥 Você criou uma *Poção de Fogo Noturno*! Ela arde tanto quanto ilumina!"
         elif {"Pó de fada", "Lágrimas de dragão"} <= ingredientes_set:
-            return "✨ Você criou uma *Poção de Voo*! Voar nunca foi tão brilhante!"
+            return texto_base + "🪄 Você criou uma *Poção de Voo*! Segure firme para não voar até a lua!"
         elif {"Unha de troll", "Essência de cebola"} <= ingredientes_set:
-            return "🤢 Você criou uma *Poção de Fedor Imortal*! Todos vão manter distância!"
+            return texto_base + "🤢 Você criou uma *Poção de Fedor Imortal*! Vai espantar até as baratas do castelo."
         elif "Olhos de sapo" in ingredientes_set:
-            return "🌙 Você criou uma *Poção de Visão Noturna*! Agora você vê até no escuro absoluto!"
+            return texto_base + "🌙 Você criou uma *Poção de Visão Noturna*! Seus olhos brilham como faróis no breu!"
         elif "Pó de fada" in ingredientes_set:
-            return "🌟 Você criou uma *Poção de Encantamento*! Tudo o que você diz soa mágico."
+            return texto_base + "🌟 Você criou uma *Poção de Encantamento*! Suas palavras agora hipnotizam qualquer um."
         else:
-            return "🌀 Você criou uma *Poção Misteriosa*! O que será que ela faz...? Só há uma maneira de descobrir!"
+            efeitos_misteriosos = [
+                "🌀 Você criou uma *Poção do Caos*! Coisas estranhas estão prestes a acontecer...",
+                "🔮 Você criou uma *Poção da Transformação*! Se prepare para se tornar algo... inesperado.",
+                "🌈 Você criou uma *Poção Arco-Íris*! Cuidado: ela traz felicidade (e confusão) em doses iguais.",
+                "🎭 Você criou uma *Poção das Máscaras*! Cada gole revela uma nova personalidade.",
+                "⚡ Você criou uma *Poção da Tempestade*! Raios e trovões vão seguir seus passos!"
+            ]
+            return texto_base + random.choice(efeitos_misteriosos)
 
     @output
     @render.text
